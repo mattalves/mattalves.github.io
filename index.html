@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>SimplexCalc</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="index.html">SimplexCalc</a>
+        </div>
+        <div>
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="index.html">Início</a></li>
+            <li><a href="https://github.com/mattalves/mattalves.github.io" target="_blank">Sobre</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-2 col-md-offset-5">
+          <form onsubmit="showResult()">
+            <div class="form-group">
+              <label for="textBox1">Max Z:</label>
+              <input type="text" class="form-control" id="textBox1" data-toggle="tooltip" data-placement="right" 
+              title="Exemplo: 3 5 -> Max Z = 3x1 + 5x2">
+            </div>
+            <div class="form-group">
+              <label for="textArea1">Sujeito a:</label>
+              <textarea class="form-control" rows="3" id="textArea1"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="textBox2">Repetições:</label>
+              <input type="number" class="form-control" id="textBox2">
+            </div>
+            <div class="checkbox">
+              <label><input type="checkbox" id="checkBox1">Mostrar somente Resultado</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Calcular</button>
+          </form>
+          <div id="panel1">
+            <table id="table1" class="table">
+              <thead>
+                <tr>
+                  <th>Linha</th>
+                  <th>Base</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="modal1" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">SimplexCalc</h4>
+          </div>
+          <div class="modal-body">
+            <p>Informe todos os valores corretamente !</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/script.js"></script>
+  </body>
+</html>
