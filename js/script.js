@@ -1,5 +1,7 @@
-posicaoLinha = 0;
-posicaoColuna = 0;
+var posicaoLinha = 0;
+var posicaoColuna= 0;
+
+var idTable = "";
 
 var numeroLinhas = 0;
 var numeroColunas = 0;
@@ -7,9 +9,17 @@ var minor = 9999;
 var column = 0;
 
 var tableCalc;
+
 var arrayMinorValue = [];
 var arrayB = [];
+var arrayColumn;
+var arrayRow;
+var arrayValueNotNull = [];
 
+var nColumn = -1;
+var hLine   = 0;
+
+var calc = true;
 function criarMatriz(linhasMatriz, colunasMatriz) {
    
    var x = new Array(linhasMatriz);
@@ -24,8 +34,8 @@ function criarMatriz(linhasMatriz, colunasMatriz) {
 
 }
 
-function montarTabela() {
-
+function montarTabela(idTable) {
+	
 	var numeroVariaveis = parseInt(document.getElementById("textBox1").value);
 	var numeroRestricoes = parseInt(document.getElementById("textBox2").value);
 	
@@ -55,15 +65,16 @@ function montarTabela() {
 		if(posicaoLinha == (numeroLinhas-1)) {
 			tabelaResposta[posicaoLinha][posicaoColuna++] = "Z";
 		} else {
-			tabelaResposta[posicaoLinha][posicaoColuna++] = "F" + posicaoLinha;
+			tabelaResposta[posicaoLinha][posicaoColuna++] = "f" + posicaoLinha;
 		}
-		while(posicaoColuna != numeroColunas) {
-		
-			var nomeEntrada = "input" + posicaoLinha + posicaoColuna;
+		if(calc) {
+			while(posicaoColuna != numeroColunas) {
 			
-			tabelaResposta[posicaoLinha][posicaoColuna++] = '<input type="number" class="span1" id="' + nomeEntrada + '">';
-		
-		}
+				var nomeEntrada = "input" + posicaoLinha + posicaoColuna;
+				
+				tabelaResposta[posicaoLinha][posicaoColuna++] = '<input type="number" class="span1" id="' + nomeEntrada + '">';
+			}
+		} 
 		
 		posicaoColuna = 0;
 		posicaoLinha++;
@@ -76,13 +87,13 @@ function montarTabela() {
 	
 	while(posicaoColuna != numeroColunas) {
 	
-		cabecalhoTabela = cabecalhoTabela + "<th>" + tabelaResposta[0][posicaoColuna++] + "</th>";
-	
+		cabecalhoTabela = cabecalhoTabela + "<th id="+idTable+nColumn+">" + tabelaResposta[0][posicaoColuna++] + "</th>";
+		nColumn++;
 	}
 	
 	cabecalhoTabela = cabecalhoTabela + "</tr>";
 	
-	document.getElementById("table1").tHead.innerHTML = cabecalhoTabela;
+	document.getElementById(idTable).tHead.innerHTML = cabecalhoTabela;
 	
 	posicaoColuna = 0;
 	posicaoLinha = 1;
@@ -90,12 +101,12 @@ function montarTabela() {
 	var corpoTabela = "";
 	
 	while(posicaoLinha != numeroLinhas) {
-		
+	
 		corpoTabela = corpoTabela + "<tr>";
 		
 		while(posicaoColuna != numeroColunas) {
 			
-			corpoTabela = corpoTabela + "<td>" + tabelaResposta[posicaoLinha][posicaoColuna++] + "</td>";
+			corpoTabela = corpoTabela + "<td id="+idTable+posicaoLinha+posicaoColuna+">" + tabelaResposta[posicaoLinha][posicaoColuna++] + "</td>";
 			
 		}
 		
@@ -106,20 +117,18 @@ function montarTabela() {
 		
 	}
 	
-	document.getElementById("table1").tBodies[0].innerHTML = corpoTabela;
-		
-	//alert(tabelaResposta);
-	
-	//document.getElementById("myTable").tHead.innerHTML -> <tr><th></th></tr>
-	//document.getElementById("myTable").tBodies[0].innerHTML -> <tr><td></td></tr>
-
+	document.getElementById(idTable).tBodies[0].innerHTML = corpoTabela;
+	posicaoLinha  = 0;
+	posicaoColuna = 0;
+	nColumn = -1;
 }
 
 function getValues(){
+	calc = false;
 	var row = 0;	
 	
-	var arrayRow = numeroLinhas - 1;
-	var arrayColumn = numeroColunas- 2;
+	arrayRow = numeroLinhas - 1;
+	arrayColumn = numeroColunas- 2;
 	
 	var nomeEntrada = "";
 	
@@ -141,21 +150,21 @@ function getValues(){
 	row--;
 	arrayColumn--;
 
-	// MENOR VALOR DA COLUNA Z 
-	for(var col = 0; col < arrayColumn; col++) {
-		if(tableCalc[row][col] < minor) {
+	// MENOR VALOR DA LINHA Z 
+	for(var col = 0; col < arrayColumn-1; col++) {
+		if(tableCalc[row][col] < minor) {		
 			minor = tableCalc[row][col];
 			column = col;
 		}	
 	}
 	
-	// MONTA UM VETOR COM O MENOR VALOR DA COLUNA Z
-	for(var row = 0; row < arrayRow; row++) {
+	// MONTA UM VETOR COM O MENOR VALOR DA LINHA Z
+	for(var row = 0; row < arrayRow-1; row++) {
 		arrayMinorValue[row] = tableCalc[row][column];
 	}
 		
 	// MONTAR VETOR DA COLUNA B
-	for(var rows = 0; rows < arrayRow; rows++) {
+	for(var rows = 0; rows < arrayRow-1; rows++) {
 		arrayB[rows] = tableCalc[rows][arrayColumn];
 	}
 	
@@ -163,11 +172,11 @@ function getValues(){
 }
 
 function simplexCalc() {
-	
+	/*
 	alert(tableCalc);
 	alert(arrayMinorValue);
 	alert(arrayB);
-	
+	*/
 	minor = 9999;
 	var arrayDiv = [];
 	
@@ -181,9 +190,52 @@ function simplexCalc() {
 		if(arrayDiv[index] < minor) {
 			minor = arrayDiv[index];
 			column = index;
-		}		
+		}
 	}
-	alert(arrayDiv);
-	alert(minor);
+	
+	hLine = column+1;
+	$("#initialTable"+hLine+"1").text($("#initialTable"+hLine).text());
+	
+	var Pivo = arrayMinorValue[column];
+	
+	montarTabela("resultTable");	
+	
+	document.getElementById("result").style.display = "inline"
+	document.getElementById("initial").style.display = "none"	
+	
+	$("#resultTable"+hLine+"1").text($("#resultTable"+hLine).text());
+	
+	// Linha / Pivo 
+	for(var index = 0; index <= arrayColumn; index++) {
+		if(tableCalc[column][index] != 0) {			
+			tableCalc[column][index] = tableCalc[column][index] / Pivo;
+		}
+	}
+	
+	// ZERANDO A COLUNA
+	for(var index = 0; index < arrayMinorValue.length; index++) {					
+		if(arrayMinorValue[index] != 0) {
+			for(var indexRow = 0; indexRow < tableCalc.length; indexRow++) {			
+				for(var indexCol = 0; indexCol < tableCalc[indexRow].length; indexCol++) {
+					console.log(tableCalc[index][indexCol] * (-arrayMinorValue[index]) + tableCalc[++index][indexCol]);
+					tableCalc[index][indexCol] = (tableCalc[index][indexCol] * (-arrayMinorValue[index])) + tableCalc[++index][indexCol];
+				}
+			}
+		}
+	}
+	
+	
+	// MONTA A TABELA RESULTADO
+	for(var indexRow = 1, row = 0; indexRow < numeroLinhas; indexRow++, row++) {			
+		for(var indexCol = 2, col = 0; indexCol < numeroColunas; indexCol++, col++) {			
+			$("#resultTable"+indexRow+indexCol).text(tableCalc[row][col]);
+		}				
+	}
+	
+	/*
+	alert(Pivo);	
+	alert("Divisao "+arrayDiv);
+	alert("Menor Divisao "+minor);
 	alert(column);
+	*/
 }
