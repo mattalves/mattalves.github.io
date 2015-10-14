@@ -216,17 +216,15 @@ function simplexCalc() {
 		}
 	}
 	
-	//ZERANDO A COLUNA (50%)
-	var indexRow = numeroLinhas-2;
+	//ZERANDO A COLUNA (50%)	
 	for(var index = 0; index < arrayMinorValue.length; index++) {					
 		if(arrayMinorValue[index] != 0) {			
 			for(var indexCol = 0; indexCol < tableCalc[0].length; indexCol++) {
-				if(indexRow > index) {
-					console.log(index);
-					tableCalc[index][indexCol] = parseInt(tableCalc[index][indexCol] * (-arrayMinorValue[index]) + tableCalc[++index][indexCol]);					
+				if(column != index) {
+					tableCalc[index][indexCol] = parseInt(tableCalc[column][indexCol] * (-arrayMinorValue[index]) + tableCalc[index][indexCol]);
+
 				}
-			}
-			indexRow++;
+			}			
 		}
 	}
 	
