@@ -142,7 +142,7 @@ function getValues(){
 			if($("#"+nomeEntrada).val() == ""){
 				tableCalc[row][col] = 0;
 			} else {
-				tableCalc[row][col] = $("#"+nomeEntrada).val();
+				tableCalc[row][col] = parseInt($("#"+nomeEntrada).val());
 			}
 		}				
 	}
@@ -151,15 +151,19 @@ function getValues(){
 	arrayColumn--;
 
 	// MENOR VALOR DA LINHA Z 
+	for(var col = 0; col < arrayColumn-1; col++) {		
+		minor = Math.min(tableCalc[row][col], minor);		
+	}
+
 	for(var col = 0; col < arrayColumn-1; col++) {
-		if(tableCalc[row][col] < minor) {		
-			minor = tableCalc[row][col];
+		if(tableCalc[row][col] == minor) {
 			column = col;
-		}	
+			break;
+		}
 	}
 	
 	// MONTA UM VETOR COM O MENOR VALOR DA LINHA Z
-	for(var row = 0; row < arrayRow-1; row++) {
+	for(var row = 0; row < arrayRow; row++) {
 		arrayMinorValue[row] = tableCalc[row][column];
 	}
 		
@@ -191,7 +195,7 @@ function simplexCalc() {
 			minor = arrayDiv[index];
 			column = index;
 		}
-	}
+	} (50%)
 	
 	hLine = column+1;
 	$("#initialTable"+hLine+"1").text($("#initialTable"+hLine).text());
@@ -212,15 +216,17 @@ function simplexCalc() {
 		}
 	}
 	
-	// ZERANDO A COLUNA
+	//ZERANDO A COLUNA (50%)
+	var indexRow = numeroLinhas-2;
 	for(var index = 0; index < arrayMinorValue.length; index++) {					
-		if(arrayMinorValue[index] != 0) {
-			for(var indexRow = 0; indexRow < tableCalc.length; indexRow++) {			
-				for(var indexCol = 0; indexCol < tableCalc[indexRow].length; indexCol++) {
-					console.log(tableCalc[index][indexCol] * (-arrayMinorValue[index]) + tableCalc[++index][indexCol]);
-					tableCalc[index][indexCol] = (tableCalc[index][indexCol] * (-arrayMinorValue[index])) + tableCalc[++index][indexCol];
+		if(arrayMinorValue[index] != 0) {			
+			for(var indexCol = 0; indexCol < tableCalc[0].length; indexCol++) {
+				if(indexRow > index) {
+					console.log(index);
+					tableCalc[index][indexCol] = parseInt(tableCalc[index][indexCol] * (-arrayMinorValue[index]) + tableCalc[++index][indexCol]);					
 				}
 			}
+			indexRow++;
 		}
 	}
 	
