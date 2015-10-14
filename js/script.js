@@ -1,28 +1,34 @@
-var posicaoLinha = 0;
-var posicaoColuna= 0;
 
 var idTable = "";
 
-var numeroLinhas = 0;
-var numeroColunas = 0;
-var minor = 9999;
-var column = 0;
+var numeroLinhas  =    0;
+var numeroColunas =    0;
+var minor         = 9999;
+var column        =    0;
 
 var tableCalc;
 
 var arrayMinorValue = [];
-var arrayB = [];
-var arrayColumn;
-var arrayRow;
-var arrayValueNotNull = [];
+var arrayB          = [];
+var arrayColumn     = [];
+var arrayRow        = [];
+var arrayBase       = [];
 
 var nColumn = -1;
-var hLine   = 0;
+var hLine   =  0;
 
-var calc = true;
-var agoraVai = 0;
-var row = 0;
+var calc   = true;
 var mTable = true;
+var check  = true;
+
+var agoraVai	 = 0;
+var row     	 = 0;
+var teste    	 = 0;
+var idMatriz     = 0;
+var posicaoLinha = 0;
+var posicaoColuna= 0;
+var cont         = 0;
+
 function criarMatriz(linhasMatriz, colunasMatriz) {
    
    var x = new Array(linhasMatriz);
@@ -126,108 +132,135 @@ function montarTabela(idTable) {
 	nColumn = -1;
 }
 
-function montaMatrizCalc() {
-
-	tableCalc = criarMatriz(arrayRow, arrayColumn);
-
-	// INSERINDO VALORES DOS INPUTS NA MATRIZ A SER CALCULADA
-	for(var indexRow = 1; indexRow < numeroLinhas; indexRow++, row++) {			
-		for(var indexCol = 2, col = 0; indexCol < numeroColunas; indexCol++, col++) {				
-			nomeEntrada = "input" + indexRow + indexCol;
-			if($("#"+nomeEntrada).val() == ""){
-				tableCalc[row][col] = 0;
-			} else {
-				tableCalc[row][col] = parseInt($("#"+nomeEntrada).val());
-			}
-		}				
-	}
-}
 
 function getValues(){
-	calc = false;	
+	calc = false;
 	
-	arrayRow = numeroLinhas - 1;
-	arrayColumn = numeroColunas- 2;
-	
-	var nomeEntrada = "";
-	
+	//alert(row);
 	// CRIANDO A MATRIZ A SER CALCULADA			
 	if(mTable){
-		montaMatrizCalc();
-	}
-
-	mTable = false;
-
-	row--;
-	arrayColumn--;
-	alert(tableCalc);
-	// MENOR VALOR DA LINHA Z 
-	for(var col = 0; col < arrayColumn-1; col++) {
+		row = 0;
+		arrayRow = numeroLinhas - 1;
+		arrayColumn = numeroColunas- 2;
 		
+		var nomeEntrada = "";
+		
+		tableCalc = criarMatriz(arrayRow, arrayColumn);
+		
+		// INSERINDO VALORES DOS INPUTS NA MATRIZ A SER CALCULADA
+		for(var indexRow = 1; indexRow < numeroLinhas; indexRow++, row++) {				
+			for(var indexCol = 2, col = 0; indexCol < numeroColunas; indexCol++, col++) {
+				nomeEntrada = "input" + indexRow + indexCol;				
+				if($("#"+nomeEntrada).val() == ""){
+					tableCalc[row][col] = 0;
+				} else {
+					tableCalc[row][col] = parseFloat($("#"+nomeEntrada).val());
+				}
+			}
+
+		}
+		arrayColumn--;		
+	}
+	
+	mTable = false;
+	row = numeroLinhas - 1;
+	row--;
+	
+	// MENOR VALOR DA LINHA Z 
+	for(var col = 0; col < arrayColumn-1; col++) {	
 		minor = Math.min(tableCalc[row][col], minor);		
 	}
-
 	for(var col = 0; col < arrayColumn-1; col++) {
-		alert("Menor "+minor);
 		if(tableCalc[row][col] == minor) {
 			column = col;
 			break;
 		}
 	}
-	
 	// MONTA UM VETOR COM O MENOR VALOR DA LINHA Z
 	for(var row = 0; row < arrayRow; row++) {
 		arrayMinorValue[row] = tableCalc[row][column];
 	}
-		
+	//alert("4 " + agoraVai);
 	// MONTAR VETOR DA COLUNA B
-	for(var rows = 0; rows < arrayRow-1; rows++) {
+	for(var rows = 0; rows < arrayRow-1; rows++) {		
 		arrayB[rows] = tableCalc[rows][arrayColumn];
-	}
-	agoraVai++;
-	simplexCalc();
+	}	
+	//alert("5 " + agoraVai);
+	agoraVai = 0;
+	//simplexCalc();
 }
 
 function simplexCalc() {
-
-	var cont = 0;
-
-	do{
-		alert("X");
-		
-
-		/*
-		alert(tableCalc);
-		alert(arrayMinorValue);
-		alert(arrayB);
-		*/
+	cont = 0;
+	if($("#nRepeat").val() != "") {
+		var nRepeat = parseInt($("#nRepeat").val());
+	}	
+	do{		
+		if(agoraVai == 0){			
+			minor = 9999;
+			agoraVai = 1;			
+			getValues();
+		}
+	
 		minor = 9999;
 		var arrayDiv = [];
-		
+		hLine = column+1;
+
+		// LINHA A SER TROCADA
 		for(var index = 0; index < arrayMinorValue.length; index++) {
-			if(arrayMinorValue[index] != 0) {
-				arrayDiv[index] = arrayB[index] / arrayMinorValue[index];
+			if(arrayMinorValue[index] != 0 && arrayB[index] != 0) {
+				arrayDiv[index] = arrayB[index] / arrayMinorValue[index];				
 			}
-		}
+		}		
 		
 		for(var index = 0; index < arrayDiv.length; index++) {
 			if(arrayDiv[index] < minor) {
 				minor = arrayDiv[index];
 				column = index;
 			}
-		} 
-		
-		hLine = column+1;
-		$("#initialTable"+hLine+"1").text($("#initialTable"+hLine).text());
-		
+		}
+
 		var Pivo = arrayMinorValue[column];
-		
-		montarTabela("resultTable");	
-		
-		document.getElementById("result").style.display = "inline"
-		document.getElementById("initial").style.display = "none"	
-		
-		$("#resultTable"+hLine+"1").text($("#resultTable"+hLine).text());
+
+	
+
+		if(check){
+		    var table = document.createElement("TABLE");
+		    table.setAttribute("id", "resultTable"+cont);
+		    var thead = document.createElement("THEAD");
+		    var tbody = document.createElement("TBODY");
+		    table.appendChild(thead);
+		    table.appendChild(tbody);
+		    table.className = "table";
+		    document.getElementById('result').appendChild(table);
+
+			montarTabela("resultTable"+cont);
+		}
+
+
+		if(document.getElementById('cbResult').checked){
+			check = false;
+			idMatriz = 0;
+		} else {
+			idMatriz = cont;
+		}
+
+		document.getElementById("result").style.display = "inline";
+		document.getElementById("initial").style.display = "none";
+
+		var hCol = column+1;
+		if(cont != 0) {
+			var c = cont - 1;
+			for(var index = 0; index < numeroColunas; index++) {
+				arrayBase[index] = $("#resultTable"+c+index+"1").text();
+			}
+			alert(arrayBase);
+			for(var index = 0; index < numeroColunas; index++) {
+				$("#resultTable"+cont+index+"1").text(arrayBase[index]);
+			}
+		}
+
+		$("#resultTable"+idMatriz+hCol+"1").text($("#resultTable"+idMatriz+hLine).text());		
 		
 		// Linha / Pivo 
 		for(var index = 0; index <= arrayColumn; index++) {
@@ -236,47 +269,38 @@ function simplexCalc() {
 			}
 		}
 		
-		//ZERANDO A COLUNA (50%)	
-		for(var index = 0; index < arrayMinorValue.length; index++) {					
-			if(arrayMinorValue[index] != 0) {			
+		//ZERANDO A COLUNA
+		for(var index = 0; index < arrayMinorValue.length; index++) {
+			if(arrayMinorValue[index] != 0) {
 				for(var indexCol = 0; indexCol < tableCalc[0].length; indexCol++) {
 					if(column != index) {
-						tableCalc[index][indexCol] = parseInt(tableCalc[column][indexCol] * (-arrayMinorValue[index]) + tableCalc[index][indexCol]);
-
+						tableCalc[index][indexCol] = parseFloat((tableCalc[column][indexCol] * (-arrayMinorValue[index])) + tableCalc[index][indexCol]);						
 					}
-				}			
+				}
 			}
 		}
-		
-		
+				
+		if(!document.getElementById('cbResult').checked) {
+			idMatriz = cont;			
+		}
 		// MONTA A TABELA RESULTADO
-		for(var indexRow = 1, row = 0; indexRow < numeroLinhas; indexRow++, row++) {			
-			for(var indexCol = 2, col = 0; indexCol < numeroColunas; indexCol++, col++) {			
-				$("#resultTable"+indexRow+indexCol).text(tableCalc[row][col]);
+		for(var indexRow = 1, row = 0; indexRow < numeroLinhas; indexRow++, row++) {
+			for(var indexCol = 2, col = 0; indexCol < numeroColunas; indexCol++, col++) {	
+				$("#resultTable"+idMatriz+indexRow+indexCol).text(tableCalc[row][col]);
 			}				
 		}
 		
-		/*
-		alert(Pivo);	
-		alert("Divisao "+arrayDiv);
-		alert("Menor Divisao "+minor);
-		alert(column);
-		*/
-		
-		var teste = 0;
+		teste = 0;
 
 		for(var index = 0; index < numeroColunas-1; index++) {
 			if(tableCalc[numeroLinhas-2][index] < 0) {
+				//alert(tableCalc[numeroLinhas-2][index]);
 				teste++;
 			}
 		}
-		//alert(teste);
-		agoraVai = 0;
-
-		if(agoraVai == 0){
-			alert(tableCalc);
-			minor = 99999;
-			getValues();
+		if(nRepeat == cont)	{
+			break;
 		}
-	}while((teste != 0));
+		cont++;		
+	}while(teste != 0);
 }
