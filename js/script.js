@@ -195,7 +195,7 @@ function simplexCalc() {
 			minor = arrayDiv[index];
 			column = index;
 		}
-	} (50%)
+	} 
 	
 	hLine = column+1;
 	$("#initialTable"+hLine+"1").text($("#initialTable"+hLine).text());
