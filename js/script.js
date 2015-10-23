@@ -194,10 +194,11 @@ function getValues(){
 	row--;
 	
 	// MENOR VALOR DA LINHA Z 
-	for(var col = 0; col < arrayColumn-1; col++) {	
-		minor = Math.min(arraySimplex[row][col], minor);		
+	for(var col = 0; col < arrayColumn; col++) {	
+		minor = Math.min(arraySimplex[row][col], minor);
+		console.log("menor"+minor)
 	}
-	for(var col = 0; col < arrayColumn-1; col++) {
+	for(var col = 0; col < arrayColumn; col++) {
 		if(arraySimplex[row][col] == minor) {
 			column = col;
 			break;
@@ -245,7 +246,7 @@ function simplexCalc() {
 
 		// COLUNA B / COLUNA QUE IRÁ ENTRAR NA BASE
 		for(var index = 0; index < arrayMinorValue.length; index++) {
-			if(arrayMinorValue[index] != 0 && arrayB[index] != 0) {
+			if(arrayMinorValue[index] > 0 && arrayB[index] > 0) {
 				arrayDiv[index] = arrayB[index] / arrayMinorValue[index];				
 			}
 		}		
@@ -336,7 +337,8 @@ function simplexCalc() {
 		cStop = 0;
 
 		for(var index = 0; index < nCols-1; index++) {
-			if(arraySimplex[nLines-2][index] < 0) {				
+			if(arraySimplex[nLines-2][index] < 0) {
+				console.log(arraySimplex[nLines-2][index]);
 				cStop++;
 			}
 		}
