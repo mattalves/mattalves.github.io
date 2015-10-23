@@ -350,7 +350,7 @@ function simplexCalc() {
 
 	}while(cStop != 0);
 
-	
+/*	
 	var cRows = nLines-1;
 	var cCol  = nCols -3;
 	cRepeat--;
@@ -364,5 +364,5 @@ function simplexCalc() {
 			window[$("#resultTable"+cRepeat+index).text()] = 0;			
 			index++
 		}
-	}
+	}*/
 }
