@@ -28,14 +28,25 @@ var idArray     = 0;
 var positionRow = 0;
 var positionCol = 0;
 var cRepeat     = 0;
+var nRepeat     = 0;
 var Pivo        = 0;
 
-$(document).ready(function(){
+$(document).ready(function() {
 	$("#nVar").focus();
 });
 
-function doNothing(){
+function doNothing() {
 	return false;
+}
+
+function resetDefault() {
+	positionRow = 0;
+	positionCol = 0;
+
+	$("#nVar").val("");
+	$("#nRestritions").val("");
+	document.getElementById('panel').style.display  ="inline";
+	document.getElementById('initial').style.display=  "none";
 }
 
 function initializeArray(nLines, nCols) {
@@ -52,9 +63,7 @@ function initializeArray(nLines, nCols) {
 }
 
 function mountTable(idTable) {
-
-	$('#btCalc').prop("disabled",false);
-
+	
 	var nVar		 = parseInt($('#nVar').val());
 	var nRestritions = parseInt($('#nRestritions').val());
 
@@ -145,6 +154,10 @@ function mountTable(idTable) {
 	positionRow  = 0;
 	positionCol = 0;
 	nColumn = -1;
+	
+	document.getElementById('panel').style.display="none";
+	document.getElementById('initial').style.display="inline";
+	
 }
 
 
@@ -207,11 +220,16 @@ function simplexCalc() {
 
 	// CONTROLE DE REPETIÇÃO
 	cRepeat = 0;
+	nRepeat = 0;
 
 	// CASO O USUARIO ENTROU COM UM NUMERO MAXIMO DE REPETIÇÃO ARMAZENA ESSE VALOR NA VARIAVEL nRepeat
 	if($("#nRepeat").val() != "") {
-		var nRepeat = parseInt($("#nRepeat").val());
-	}	
+		nRepeat = parseInt($("#nRepeat").val());
+	} else {
+		// CASO O USUARIO NÃO TENHA DIGITADO UM NUMERO MAXIMO DE REPETIÇÃO E IRÁ REPETIR 10 VEZES E IRÁ PARAR A EXECUÇÃO DO ALGORITMO.
+		nRepeat = 10;
+	}
+
 	do{		
 
 		// CONTROLE PARA PEGAR VALORES DA TABELA ANTERIOR
@@ -331,4 +349,20 @@ function simplexCalc() {
 		cRepeat++;		
 
 	}while(cStop != 0);
+
+	
+	var cRows = nLines-1;
+	var cCol  = nCols -3;
+	cRepeat--;
+	
+	for(var index = 1; index < cRows; index++) {
+		window[$("#resultTable"+cRepeat+index+"1").text()] = arraySimplex[index][cCol];		
+	}
+	
+	for(var index = 1; index < cCol; ) {
+		if($("#resultTable"+cRepeat+index+"1").text() != $("#resultTable"+cRepeat+index).text()) {
+			window[$("#resultTable"+cRepeat+index).text()] = 0;			
+			index++
+		}
+	}
 }
