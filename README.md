@@ -1,4 +1,4 @@
-Nota de liberação: 
+Nota de liberação:https://github.com/mattalves/mattalves.github.io/blob/master/notaDeLiberacao.docx
 
 # Mochila
 # SimplexCalc
